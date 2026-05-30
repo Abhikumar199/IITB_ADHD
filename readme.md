@@ -170,23 +170,6 @@ This framework can be extended for:
 - Digital phenotyping
 - Neuropsychological assessment
 
----
-
-## Author
-
-**Abhishek Kumar**
-
-M.S. in Artificial Intelligence & Data Science  
-ABV-IIITM Gwalior
-
-Research Interests:
-- Computational Neuroscience
-- Neuromorphic Computing
-- Spiking Neural Networks
-- Cognitive Modeling
-- AI for Mental Health
-
----
 
 ## License
 

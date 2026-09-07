@@ -1,0 +1,6 @@
+Outer Fold,Features,N Features,Behavioral Features,DDM Features,Inner Balanced Accuracy,Inner ROC-AUC
+1,rt_std + commission_rate + v + a + t,5,2,3,0.7959459459459459,0.7777027027027027
+2,rt_mean + accuracy + commission_rate + d_prime,4,4,0,0.756418918918919,0.7445945945945946
+3,rt_mean + accuracy + omission_rate + commission_rate + a,5,4,1,0.7684210526315789,0.7776315789473685
+4,rt_mean + accuracy + omission_rate + t,4,3,1,0.8092105263157895,0.7881578947368422
+5,rt_mean + rt_std + accuracy + omission_rate + d_prime + t,6,5,1,0.8078947368421052,0.7947368421052631

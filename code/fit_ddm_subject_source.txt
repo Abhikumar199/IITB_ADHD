@@ -1,0 +1,103 @@
+def fit_ddm_subject(rt_arr, correct_arr, subject_id=None):
+
+    try:
+
+        # Create PyDDM sample
+        sample = Sample.from_numpy_array(
+            np.column_stack([
+                rt_arr,
+                correct_arr.astype(int)
+            ])
+        )
+
+        # ----------------------------------------------------
+        # 3-PARAMETER DDM
+        # ----------------------------------------------------
+
+        model = Model(
+
+            name=f"subj_{subject_id}",
+
+            # Drift rate
+            # Allow both positive and negative drift
+            drift=DriftConstant(
+                drift=Fittable(
+                    minval=-5.0,
+                    maxval=5.0
+                )
+            ),
+
+            # Diffusion noise fixed at 1
+            noise=NoiseConstant(
+                noise=1.0
+            ),
+
+            # Boundary separation
+            bound=BoundConstant(
+                B=Fittable(
+                    minval=0.3,
+                    maxval=2.5
+                )
+            ),
+
+            # Non-decision time + 2% lapse
+            overlay=OverlayChain(
+                overlays=[
+
+                    OverlayNonDecision(
+                        nondectime=Fittable(
+                            minval=0.1,
+                            maxval=0.7
+                        )
+                    ),
+
+                    OverlayUniformMixture(
+                        umixturecoef=0.02
+                    )
+                ]
+            ),
+
+            # Numerical settings
+            dx=0.01,
+            dt=0.01,
+
+            # IMPORTANT:
+            # Must exceed maximum RT (~10 s)
+            T_dur=10.5
+        )
+
+        # ----------------------------------------------------
+        # FIT
+        # ----------------------------------------------------
+
+        fit_adjust_model(
+            sample,
+            model,
+            fitting_method="differential_evolution",
+            lossfunction=LossRobustLikelihood,
+            verbose=False
+        )
+
+        # ----------------------------------------------------
+        # EXTRACT PARAMETERS
+        # ----------------------------------------------------
+
+        params = model.get_model_parameters()
+
+        return {
+            "v": float(params[0]),
+            "a": float(params[1]),
+            "t": float(params[2])
+        }
+
+    except Exception as e:
+
+        print(
+            f"Subject {subject_id} failed: {e}"
+        )
+
+        return {
+            "v": np.nan,
+            "a": np.nan,
+            "t": np.nan
+        }
